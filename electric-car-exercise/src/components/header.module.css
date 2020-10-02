@@ -1,0 +1,16 @@
+.headerBox {
+  height: 70px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.headerLinksContainer {
+  display:flex;
+ justify-content: space-evenly; 
+}
+
+.headerLinks {
+  background-color: pink;
+  width: 100%;
+  text-align: center;
+}

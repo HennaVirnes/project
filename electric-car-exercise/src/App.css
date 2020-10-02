@@ -1,0 +1,15 @@
+.appContainer {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.map {
+  height:600px;
+  width: 100%;
+}
