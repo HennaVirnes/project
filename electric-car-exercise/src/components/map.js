@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import L from 'leaflet';
-import {Map, TileLayer, Marker, Popup} from 'react-leaflet';
+import {Map, TileLayer, Marker, Popup, Tooltip} from 'react-leaflet';
 
 var myIcon=L.icon({
   iconUrl: '/greenmarker.png',
@@ -28,11 +28,12 @@ export default class map extends Component  {
               attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={position} icon={myIcon}>
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
-            </Marker>
+            {this.props.stations.map(station => (
+              <Marker onClick={() => this.props.selectStation(station)} key={station.id} position={[station.lattitude, station.longitude]} icon={myIcon}>
+                <Tooltip direction="bottom">
+                  {station.name} <br /> {station.streetAddress}, {station.zipCode}, {station.city}.
+                </Tooltip>
+              </Marker> ))}
           </Map>
         </div>
       </Route>
