@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 export default class station extends Component {
   render() {
 
-    let output = <> </>
+    let output = <>Choose a station from the map </>
 
     if(this.props.selectedStation.stationid != null) {
      output =
-    <>
+    <div>
       <div>
         Station:  {this.props.selectedStation.name}
       </div>
@@ -23,11 +23,14 @@ export default class station extends Component {
       <div>
         Fastchargers: {this.props.selectedStation.qntFast}, price {this.props.selectedStation.priceFast} €/kwH
       </div>
-    </>
+      <div>
+        <img className="stationImage" src={this.props.selectedStation.image}></img>
+      </div>
+    </div>
     }
 
     return (
-      <div>
+      <div className="stationContainer">
         {output}
       </div>
 

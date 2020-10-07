@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Station from './station';
 import L from 'leaflet';
 import {Map, TileLayer, Marker, Popup, Tooltip} from 'react-leaflet';
 
@@ -22,7 +23,8 @@ export default class map extends Component  {
     const position = [this.state.lat, this.state.lng]
     return (
       <Route path="/map">
-        <div>
+        <Station selectedStation={this.props.selectedStation}/>
+        <div className="mapContainer">
           <Map className="map" center={position} zoom={this.state.zoom}>
             <TileLayer
               attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

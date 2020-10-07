@@ -11,5 +11,22 @@ a {
 
 .map {
   height:600px;
-  width: 100%;
+  width:100%;
+}
+
+.mapAndStation {
+  display: flex;
+}
+
+.stationContainer {
+  width: 200px;
+  margin-right: 5px;
+}
+
+.mapContainer {
+  flex-grow: 4;
+}
+
+.stationImage {
+  width:200px;
 }

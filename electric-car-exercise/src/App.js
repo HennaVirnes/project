@@ -73,8 +73,8 @@ export default class App extends Component {
         <div>
           <Header/>
         </div>
-        <div>
-          <Map stations={this.state.stations} selectStation={this.selectStation}/>
+        <div className="mapAndStation">
+          <Map stations={this.state.stations} selectStation={this.selectStation} selectedStation={this.state.selectedStation}/>
         </div>
         <div>
           <Login/>
@@ -83,7 +83,7 @@ export default class App extends Component {
           <Registerform registerUser={this.registerUser}/>
         </div>
         <div>
-          <Station selectedStation={this.state.selectedStation}/>
+          
         </div>
       </div>
     </Router>
