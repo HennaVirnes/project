@@ -11,6 +11,7 @@ export default function registerform(props) {
       event.target['password'].value,
       event.target['fname'].value,
       event.target['lname'].value,
+      window.location.replace('/login')
     );
   }
 
@@ -27,9 +28,9 @@ export default function registerform(props) {
           <div>password again<input type="text" name="passwordConfirmation"></input> </div>
           <div>firstname<input type="text" name="fname"></input> </div>
           <div>lastname<input type="text" name="lname"></input> </div>
-          <div><input type="checkbox"></input> I agree terms and conditions </div>
+          <div><input type="checkbox" id="termsConditions"></input> I agree terms and conditions </div>
           <div><button onClick={ cancelReg }>cancel</button></div>
-          <div><input type="submit" value="submit"></input></div>
+          <div><input type="submit" id="submitButton" value="submit"></input></div>
         </form>
       </div>
     </Route>
