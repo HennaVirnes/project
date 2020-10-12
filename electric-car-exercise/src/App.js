@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"; 
+import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom"; 
 import Login from './components/login';
 import Header from './components/header';
 import Map from './components/map';
@@ -40,7 +40,13 @@ export default class App extends Component {
         image: null,
         longitude: null,
         lattitude: null
-      }
+      },
+      regUserName: "",
+      regPassword: "",
+      regPasswordConfirmation: "",
+      regFName: "",
+      regLName: "",
+      checkTermsConditions: false      
     };
   }
 
@@ -106,10 +112,21 @@ export default class App extends Component {
     .catch(error => console.log(error));
   }
 
-  
-
   logout = () => {
-    this.setState({userLogged: false});
+    this.setState({userLogged: false})
+    this.setState({userId: null})
+    this.setState({password: null})
+    this.setState({fname: null})
+    this.setState({lname: null})
+  }
+
+  updateSearch = (event) => {
+    const name = event.target.name;
+    this.setState({[name]: event.target.value.substr(0,20)});
+  }
+
+  ChangeCheckTermsConditions = () => {
+    this.setState({checkTermsConditions: !this.state.checkTermsConditions});
   }
 
   render() {
@@ -120,13 +137,23 @@ export default class App extends Component {
           <Header userLogged={this.state.userLogged} logout={this.logout}/>
         </div>
         <div className="mapAndStation">
-          <Map stations={this.state.stations} selectStation={this.selectStation} selectedStation={this.state.selectedStation}/>
+          <Map stations={this.state.stations} 
+               selectStation={this.selectStation} 
+               selectedStation={this.state.selectedStation}
+               userLogged={this.state.userLogged}/>
         </div>
         <div>
           <Login loginClick={this.loginClick}/>
         </div>
         <div>
-          <Registerform registerUser={this.registerUser}/>
+          <Registerform registerUser={this.registerUser} 
+                        updateSearch={this.updateSearch} 
+                        regUserName={this.state.regUserName}
+                        regPassword={this.state.regPassword}
+                        regFName={this.state.regFName}
+                        regLName={this.state.regLName}
+                        checkTermsConditions={this.state.checkTermsConditions}
+                        ChangeCheckTermsConditions={this.ChangeCheckTermsConditions}/>
         </div>
         <div>
           <Myaccount userInfo={this.state.userInfo}/>

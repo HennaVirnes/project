@@ -23,7 +23,8 @@ export default class map extends Component  {
     const position = [this.state.lat, this.state.lng]
     return (
       <Route path="/map">
-        <Station selectedStation={this.props.selectedStation}/>
+        <Station selectedStation={this.props.selectedStation}
+                 userLogged={this.props.userLogged}/>
         <div className="mapContainer">
           <Map className="map" center={position} zoom={this.state.zoom}>
             <TileLayer

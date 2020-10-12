@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 export default class station extends Component {
   render() {
 
+    const isEnabled = this.props.userLogged
+
     let output = <>Choose a station from the map </>
 
     if(this.props.selectedStation.stationid != null) {
@@ -25,6 +27,10 @@ export default class station extends Component {
       </div>
       <div>
         <img className="stationImage" src={this.props.selectedStation.image}></img>
+      </div>
+      <div>
+        <button disabled={!isEnabled}>Start slowCharge</button>
+        <button disabled={!isEnabled}>Start FastCharge</button>
       </div>
     </div>
     }
