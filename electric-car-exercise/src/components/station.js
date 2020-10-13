@@ -29,21 +29,24 @@ export default class station extends Component {
         <img className="stationImage" src={this.props.selectedStation.image}></img>
       </div>
       <div>
-        <button disabled={!isEnabled}>Start slowCharge</button>
+        <button disabled={isEnabled} onClick={this.props.startCharge}>Start slowCharge</button>
         <button disabled={!isEnabled}>Start FastCharge</button>
+      </div>
+      <div>
+        Start time here: {this.props.activeCharger.startTime}
       </div>
     </div>
     }
 
     return (
       <div className="stationContainer">
+        <div><input type="text" 
+                    name="searchStation" 
+                    placeholder="Search a station" 
+                    value={this.props.searchStation} 
+                    onChange={this.props.stationSearch}></input></div>
         {output}
-      </div>
-
-        
-        
-        
-        
+      </div>        
     )
   }
 }

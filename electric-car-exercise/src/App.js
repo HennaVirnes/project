@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Switch, Route, Link} from "react-router-dom"; 
+import history from 'history/browser';
 import Login from './components/login';
 import Header from './components/header';
 import Map from './components/map';
@@ -7,6 +8,7 @@ import Registerform from './components/registerform';
 import './App.css'; 
 import axios from 'axios';
 import Myaccount from './components/myaccount';
+import {PrivateRoute} from './components/privateroute';
 
 const urladdress = "http://localhost:4000/";
 
@@ -46,7 +48,17 @@ export default class App extends Component {
       regPasswordConfirmation: "",
       regFName: "",
       regLName: "",
-      checkTermsConditions: false      
+      checkTermsConditions: false,
+      myCharges: [],
+      activeCharger:{
+        stationid: null,
+        startTime: null,
+        stopTime: null,
+        totalTime: 0,
+        electricityUsed: null,
+        totalPrice: null
+      },
+      searchStation: ""
     };
   }
 
@@ -75,6 +87,8 @@ export default class App extends Component {
   selectStation = (station)=>{
     console.log("station " + station.stationid +" selected")
     this.setState({selectedStation: station})
+    let newActiveCharger = {...this.state.activeCharger, stationid: station.stationid};
+    this.setState({activeCharger: newActiveCharger});
   }
 
   getSelectedStationInfo = (stationId) =>
@@ -95,6 +109,17 @@ export default class App extends Component {
       }})
     })
   }
+  
+  prevChargesOnId = (username, password) => {
+    axios.get(urladdress + "mycharges/"+ username,
+    {auth:{
+      username,
+      password
+    }})
+    .then(response => {
+      this.setState({myCharges: response.data});
+    })
+  }
 
   loginClick = (username, password) => {
     axios.get( urladdress +'login', 
@@ -106,18 +131,20 @@ export default class App extends Component {
                 })
     .then(response => {
       console.log('Login succesfull with user ' +username);
-      this.setState({userLogged: true})
+      this.setState({userLogged: true});
       this.getUserInfo(username);
+      this.prevChargesOnId(username, password);
     })
     .catch(error => console.log(error));
   }
 
   logout = () => {
-    this.setState({userLogged: false})
-    this.setState({userId: null})
-    this.setState({password: null})
-    this.setState({fname: null})
-    this.setState({lname: null})
+    this.setState({userLogged: false});
+    this.setState({userId: null});
+    this.setState({password: null});
+    this.setState({fname: null});
+    this.setState({lname: null});
+    history.replace('/map');
   }
 
   updateSearch = (event) => {
@@ -129,18 +156,35 @@ export default class App extends Component {
     this.setState({checkTermsConditions: !this.state.checkTermsConditions});
   }
 
+  startCharge = () => {
+    var date =  Date.now();
+    let newActiveCharger = {...this.state.activeCharger, startTime: date };
+    this.setState({activeCharger: newActiveCharger});
+    console.log(date);
+  }
+
+  stationSearch = (event) => {
+    this.setState({searchStation: event.target.value});
+  }
+
   render() {
     return (
       <Router>
       <div className="appContainer">
         <div>
-          <Header userLogged={this.state.userLogged} logout={this.logout}/>
+          <Header userLogged={this.state.userLogged} 
+                  logout={this.logout}
+              />
         </div>
         <div className="mapAndStation">
           <Map stations={this.state.stations} 
                selectStation={this.selectStation} 
                selectedStation={this.state.selectedStation}
-               userLogged={this.state.userLogged}/>
+               userLogged={this.state.userLogged}
+               activeCharger={this.state.activeCharger}
+               startCharge={this.startCharge}
+               searchStation={this.state.searchStation}
+               stationSearch={this.stationSearch} />
         </div>
         <div>
           <Login loginClick={this.loginClick}/>
@@ -156,7 +200,17 @@ export default class App extends Component {
                         ChangeCheckTermsConditions={this.ChangeCheckTermsConditions}/>
         </div>
         <div>
-          <Myaccount userInfo={this.state.userInfo}/>
+          <Myaccount userInfo={this.state.userInfo}
+                     userLogged={this.state.userLogged}
+                     myCharges={this.state.myCharges}/>
+
+{/* <PrivateRoute path="/myaccount" 
+                        component={Myaccount} 
+                        userInfo={this.state.userInfo}
+                        userLogged={this.state.userLogged}
+                        myCharges={this.state.myCharges}/> */}
+
+
         </div>
       </div>
     </Router>

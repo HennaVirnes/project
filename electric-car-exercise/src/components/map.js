@@ -24,7 +24,11 @@ export default class map extends Component  {
     return (
       <Route path="/map">
         <Station selectedStation={this.props.selectedStation}
-                 userLogged={this.props.userLogged}/>
+                 userLogged={this.props.userLogged}
+                 activeCharger={this.props.activeCharger}
+                 startCharge={this.props.startCharge}
+                 searchStation={this.props.searchStation}
+                 stationSearch={this.props.stationSearch}/>
         <div className="mapContainer">
           <Map className="map" center={position} zoom={this.state.zoom}>
             <TileLayer

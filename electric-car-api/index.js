@@ -75,13 +75,20 @@ app.get('/login', passport.authenticate('basic', {session: false}) , (req,res) =
 })
 
 app.get('/users/:username',
- 
   (req, res) => {
     db.query('SELECT userid, username, fname, lname FROM users WHERE username = ?', [req.params.username]).then(results => {
       res.json(results);
       console.log(results);
     })
   });
+
+app.get('/mycharges/:username', passport.authenticate('basic', {session: false}) , (req, res) => {
+  db.query('SELECT * FROM allcharges WHERE userid in (SELECT userid from users WHERE username = ?)', [req.params.username]).then(results => {
+    console.log(req.params.userid);
+    res.json(results);
+    console.log(results);
+  })
+})
 
 
 
@@ -108,6 +115,18 @@ Promise.all(
         fname VARCHAR(32),
         lname VARCHAR (32),
         password VARCHAR (128)
+    )`),
+    db.query(`CREATE TABLE IF NOT EXISTS allcharges (
+      chargeid int NOT NULL,
+      startTime DATETIME,
+      stopTime DATETIME,
+      electricityUsed VARCHAR(128),
+      totalPrice VARCHAR(128),
+      userid VARCHAR(128),
+      stationid INT,
+      PRIMARY KEY (chargeid),
+      FOREIGN KEY (userid) REFERENCES users(userid),
+      FOREIGN KEY (stationid) REFERENCES chargestations(stationid)
     )`),
   ]
 ).then(() => {
