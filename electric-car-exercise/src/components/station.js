@@ -26,9 +26,6 @@ export default class station extends Component {
         Fastchargers: {this.props.selectedStation.qntFast}, price {this.props.selectedStation.priceFast} €/kwH
       </div>
       <div>
-        <img className="stationImage" src={this.props.selectedStation.image}></img>
-      </div>
-      <div>
         <button disabled={isEnabled} onClick={this.props.startCharge}>Start slowCharge</button>
         <button disabled={!isEnabled}>Start FastCharge</button>
       </div>

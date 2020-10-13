@@ -8,9 +8,9 @@ import Registerform from './components/registerform';
 import './App.css'; 
 import axios from 'axios';
 import Myaccount from './components/myaccount';
-import {PrivateRoute} from './components/privateroute';
 
 const urladdress = "http://localhost:4000/";
+const stationAddress = "https://api.openchargemap.io/v3/poi/?output=json&countrycode=FI";
 
 
 export default class App extends Component {
@@ -35,11 +35,10 @@ export default class App extends Component {
         streetaddress: null,
         zipCode: null,
         city: null,
-        qntslow: null,
+        qntSlow: null,
         priceSlow: null,
-        qntfast: null,
+        qntFast: null,
         pricefast: null,
-        image: null,
         longitude: null,
         lattitude: null
       },
@@ -63,9 +62,10 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(urladdress + 'stations')
+    axios.get(stationAddress)
     .then((response) => {
       this.setState({stations: response.data})
+      console.log(response.data);
     });
   }
 
@@ -86,7 +86,21 @@ export default class App extends Component {
 
   selectStation = (station)=>{
     console.log("station " + station.stationid +" selected")
-    this.setState({selectedStation: station})
+    this.setState({selectedStation: {
+      stationid: station.ID,
+      name: station.AddressInfo.Title,
+      streetaddress: station.AddressInfo.AddressLine1,
+      zipCode: station.AddressInfo.Postcode,
+      city: station.AddressInfo.Town,
+      qntSlow: station.Connections.filter(pekka => pekka.LevelID == 2).reduce((count, mirkku) => count + mirkku.Quantity, 0),
+      priceSlow: null,
+      qntFast: station.Connections.filter(pekka => pekka.LevelID == 3).reduce((count, mirkku) => count + mirkku.Quantity, 0),
+      pricefast: null,
+      longitude: station.AddressInfo.longitude,
+      lattitude: station.AddressInfo.latitude
+    }})
+    console.log(this.state.selectedStation.qntslow)
+    console.log(station.Connections.filter(pekka => pekka.LevelID == 2))
     let newActiveCharger = {...this.state.activeCharger, stationid: station.stationid};
     this.setState({activeCharger: newActiveCharger});
   }
@@ -203,14 +217,6 @@ export default class App extends Component {
           <Myaccount userInfo={this.state.userInfo}
                      userLogged={this.state.userLogged}
                      myCharges={this.state.myCharges}/>
-
-{/* <PrivateRoute path="/myaccount" 
-                        component={Myaccount} 
-                        userInfo={this.state.userInfo}
-                        userLogged={this.state.userLogged}
-                        myCharges={this.state.myCharges}/> */}
-
-
         </div>
       </div>
     </Router>

@@ -36,9 +36,9 @@ export default class map extends Component  {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {this.props.stations.map(station => (
-              <Marker onClick={() => this.props.selectStation(station)} key={station.id} position={[station.lattitude, station.longitude]} icon={myIcon}>
+              <Marker onClick={() => this.props.selectStation(station)} key={station.id} position={[station.AddressInfo.Latitude, station.AddressInfo.Longitude]} icon={myIcon}>
                 <Tooltip direction="bottom">
-                  {station.name} <br /> {station.streetAddress}, {station.zipCode}, {station.city}.
+                  {station.AddressInfo.Title} <br /> {station.AddressInfo.AddressLine1}, {station.AddressInfo.Postcode}, {station.AddressInfo.Town}.
                 </Tooltip>
               </Marker> ))}
           </Map>
