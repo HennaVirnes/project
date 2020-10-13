@@ -28,7 +28,10 @@ export default class map extends Component  {
                  activeCharger={this.props.activeCharger}
                  startCharge={this.props.startCharge}
                  searchStation={this.props.searchStation}
-                 stationSearch={this.props.stationSearch}/>
+                 stationSearch={this.props.stationSearch}
+                 startingCode={this.props.startingCode}
+                 updateSearch={this.props.updateSearch}
+                 isChargerCodeValid ={this.props.isChargerCodeValid}/>
         <div className="mapContainer">
           <Map className="map" center={position} zoom={this.state.zoom}>
             <TileLayer

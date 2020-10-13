@@ -26,8 +26,8 @@ export default class station extends Component {
         Fastchargers: {this.props.selectedStation.qntFast}, price {this.props.selectedStation.priceFast} €/kwH
       </div>
       <div>
-        <button disabled={isEnabled} onClick={this.props.startCharge}>Start slowCharge</button>
-        <button disabled={!isEnabled}>Start FastCharge</button>
+        <input type="text" name="startingCode" placeholder="Enter code here" value={this.props.startingCode} onChange={this.props.updateSearch}/>
+        <button disabled={!isEnabled} onClick={this.props.isChargerCodeValid}>Start Charge</button>
       </div>
       <div>
         Start time here: {this.props.activeCharger.startTime}

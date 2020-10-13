@@ -57,7 +57,10 @@ export default class App extends Component {
         electricityUsed: null,
         totalPrice: null
       },
-      searchStation: ""
+      searchStation: "",
+      startingCode: null,
+      priceType: null,
+      unitPrice: null
     };
   }
 
@@ -116,7 +119,7 @@ export default class App extends Component {
     axios.get(urladdress + 'users/' + username)
     .then((response) => {
       this.setState({userInfo: {
-        userid: response.data[0].userid,
+        userId: response.data[0].userid,
         username: username,
         fname: response.data[0].fname,
         lname: response.data[0].lname
@@ -171,15 +174,56 @@ export default class App extends Component {
   }
 
   startCharge = () => {
-    var date =  Date.now();
-    let newActiveCharger = {...this.state.activeCharger, startTime: date };
-    this.setState({activeCharger: newActiveCharger});
-    console.log(date);
+    axios.post(urladdress + 'allcharges',
+    {
+        startTime: Date.now(),
+        priceType: this.state.priceType,
+        unitPrice: this.state.unitPrice,
+        userid: this.state.userInfo.userId,
+        stationid: this.state.selectedStation.stationid,
+        chargerCode: this.state.startingCode
+    },)
+    // var date =  Date.now();
+    // let newActiveCharger = {...this.state.activeCharger, startTime: date };
+    // this.setState({activeCharger: newActiveCharger});
+    // console.log(date);
   }
 
   stationSearch = (event) => {
     this.setState({searchStation: event.target.value});
   }
+
+  
+  isThereChargeOngoing = (userId) => {
+    axios.get(urladdress + "charge/"+ userId)
+    .then(response => {
+      if(response.data.found) {
+        //ongoing charge in database
+        alert("you have a car charging. Stop that first")
+      }
+      else{
+        //no ongoing charges in database, creating new 
+        console.log("startin new charge");
+        this.startCharge();
+        
+      }
+    })
+  }
+
+  isChargerCodeValid = () => {
+    const validChargerCodes = [{code:"FR33", type:0, price:0}, {code:"5L0W", type:1, price: 0.2}, {code:"F45T", type:2, price: 0.18}];
+    if(validChargerCodes.some( code => 
+      code.code == this.state.startingCode
+      )) {
+        let typeFinder = validChargerCodes.find(code => 
+         { return code.code ==this.state.startingCode})
+         this.setState({priceType: typeFinder.type, unitPrice: typeFinder.price})       
+        this.isThereChargeOngoing(this.state.userInfo.userId);
+      } else {
+        alert("Wrong charging code, please try again!")
+      };
+  }
+
 
   render() {
     return (
@@ -198,7 +242,10 @@ export default class App extends Component {
                activeCharger={this.state.activeCharger}
                startCharge={this.startCharge}
                searchStation={this.state.searchStation}
-               stationSearch={this.stationSearch} />
+               stationSearch={this.stationSearch}
+               startingCode={this.state.startingCode}
+               updateSearch={this.updateSearch}
+               isChargerCodeValid ={this.isChargerCodeValid} />
         </div>
         <div>
           <Login loginClick={this.loginClick}/>

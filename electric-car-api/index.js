@@ -90,6 +90,30 @@ app.get('/mycharges/:username', passport.authenticate('basic', {session: false})
   })
 })
 
+app.get('/charge/:userid', (req, res) => {
+  db.query('SELECT * FROM allcharges WHERE userid = ? AND startTime IS NOT NULL AND stopTime IS NULL', [req.params.userid])
+  .then(results => {
+    if(results.length==0){
+      res.json({found:false})
+    }
+    else{
+      res.json({found:true})
+    }
+  })
+})
+
+app.post('/allcharges', (req, res) => {
+  db.query('INSERT INTO allcharges (`startTime`, `priceType`, `unitPrice`, `userid`, `stationid`, `chargerCode`) VALUES (?, ?, ?, ?, ?, ?);',
+  [req.body.startTime, req.body.priceType, req.body.unitPrice, req.body.userid, req.body.stationid, req.body.chargerCode])
+  .then(dbResult => {
+    res.sendStatus(201);
+    console.log("new charge started");
+  })
+  .catch(error => res.sendStatus(500));
+  console.log("somethign went wrong");
+}
+)
+
 
 
 /* DB init */
@@ -117,18 +141,20 @@ Promise.all(
         password VARCHAR (128)
     )`),
     db.query(`CREATE TABLE IF NOT EXISTS allcharges (
-      chargeid int NOT NULL,
-      startTime DATETIME,
-      stopTime DATETIME,
+      chargeid INT AUTO_INCREMENT PRIMARY KEY,
+      startTime VARCHAR(128),
+      stopTime VARCHAR(128),
       electricityUsed VARCHAR(128),
+      priceType VARCHAR(32),
+      unitPrice DOUBLE(32,2),
       totalPrice VARCHAR(128),
       userid VARCHAR(128),
       stationid INT,
-      PRIMARY KEY (chargeid),
-      FOREIGN KEY (userid) REFERENCES users(userid),
-      FOREIGN KEY (stationid) REFERENCES chargestations(stationid)
+      chargerCode VARCHAR (32),
+      FOREIGN KEY (userid) REFERENCES users(userid)
     )`),
   ]
+
 ).then(() => {
   console.log('database initialized');
   app.listen(port, () => {
