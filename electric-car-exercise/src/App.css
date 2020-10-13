@@ -45,3 +45,8 @@ th {
   padding-left: 7px;
   padding-right: 7px;
 }
+
+button {
+  background-color: pink;
+  margin: 5px;
+}

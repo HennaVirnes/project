@@ -97,7 +97,14 @@ app.get('/charge/:userid', (req, res) => {
       res.json({found:false})
     }
     else{
-      res.json({found:true})
+      res.json({found:true, 
+                chargeData: {
+                  chargeid: results[0].chargeid, 
+                  startTime: results[0].startTime, 
+                  priceType: results[0].priceType, 
+                  unitPrice: results[0].unitPrice 
+                }
+              })
     }
   })
 })
@@ -111,8 +118,17 @@ app.post('/allcharges', (req, res) => {
   })
   .catch(error => res.sendStatus(500));
   console.log("somethign went wrong");
-}
-)
+})
+
+app.put('/charge/update/:chargeid', (req,res) => {
+  db.query('UPDATE allcharges SET `stopTime` = ?, `electricityUsed` = ?, `totalPrice` = ? WHERE (`chargeid` = ?);',
+  [req.body.stopTime, req.body.electricityUsed, req.body.totalPrice, req.params.chargeid])
+  .then(results => {
+    console.log(results),
+    console.log("jee?");
+  })
+})
+
 
 
 
@@ -147,7 +163,7 @@ Promise.all(
       electricityUsed VARCHAR(128),
       priceType VARCHAR(32),
       unitPrice DOUBLE(32,2),
-      totalPrice VARCHAR(128),
+      totalPrice DOUBLE(32,2),
       userid VARCHAR(128),
       stationid INT,
       chargerCode VARCHAR (32),

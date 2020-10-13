@@ -20,18 +20,32 @@ export default class station extends Component {
         {this.props.selectedStation.zipCode} {this.props.selectedStation.city}
       </div>
       <div>
-        SlowChargers: {this.props.selectedStation.qntSlow}, price {this.props.selectedStation.priceSlow} €/min
+        SlowChargers: {this.props.selectedStation.qntSlow}, price 0.20€ /min
       </div>
       <div>
-        Fastchargers: {this.props.selectedStation.qntFast}, price {this.props.selectedStation.priceFast} €/kwH
+        Fastchargers: {this.props.selectedStation.qntFast}, price 0.18 €/kwH
       </div>
       <div>
-        <input type="text" name="startingCode" placeholder="Enter code here" value={this.props.startingCode} onChange={this.props.updateSearch}/>
-        <button disabled={!isEnabled} onClick={this.props.isChargerCodeValid}>Start Charge</button>
+        
       </div>
+      {this.props.userLogged === false ? (
+        <span></span>
+      ):(
       <div>
-        Start time here: {this.props.activeCharger.startTime}
+      {this.props.chargeOngoing === false ? (
+        <span>
+          <input type="text" name="startingCode" placeholder="Enter code here" value={this.props.startingCode} onChange={this.props.updateSearch}/>
+          <button disabled={!isEnabled} onClick={this.props.isChargerCodeValid}>Start Charge</button>
+        </span>
+        ) : (
+        <span> 
+          Charge Ongoing
+          <button onClick={() => this.props.stopCharge(this.props.userInfo.userId)}>Stop Charge</button>
+        </span>
+        )
+      }
       </div>
+      )}
     </div>
     }
 

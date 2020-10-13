@@ -60,7 +60,8 @@ export default class App extends Component {
       searchStation: "",
       startingCode: null,
       priceType: null,
-      unitPrice: null
+      unitPrice: null,
+      chargeOngoing: false
     };
   }
 
@@ -138,6 +139,16 @@ export default class App extends Component {
     })
   }
 
+  checkOngoingCharges = (userId) => {
+    axios.get(urladdress + "charge/"+ userId)
+    .then(response => {
+      if(response.data.found) {
+        //ongoing charge in database
+        this.setState({chargeOngoing: true});
+      }
+    })
+  }
+
   loginClick = (username, password) => {
     axios.get( urladdress +'login', 
                 {
@@ -151,6 +162,8 @@ export default class App extends Component {
       this.setState({userLogged: true});
       this.getUserInfo(username);
       this.prevChargesOnId(username, password);
+      this.checkOngoingCharges(this.state.userInfo.userId);
+      
     })
     .catch(error => console.log(error));
   }
@@ -162,6 +175,8 @@ export default class App extends Component {
     this.setState({fname: null});
     this.setState({lname: null});
     history.replace('/map');
+    this.setState({chargeOngoing: false})
+    
   }
 
   updateSearch = (event) => {
@@ -183,10 +198,9 @@ export default class App extends Component {
         stationid: this.state.selectedStation.stationid,
         chargerCode: this.state.startingCode
     },)
-    // var date =  Date.now();
-    // let newActiveCharger = {...this.state.activeCharger, startTime: date };
-    // this.setState({activeCharger: newActiveCharger});
-    // console.log(date);
+    .then(response => {
+      this.setState({chargeOngoing: true});
+    })
   }
 
   stationSearch = (event) => {
@@ -199,7 +213,8 @@ export default class App extends Component {
     .then(response => {
       if(response.data.found) {
         //ongoing charge in database
-        alert("you have a car charging. Stop that first")
+        this.setState({chargeOngoing: true});
+        alert("you have a car charging. Stop that first");
       }
       else{
         //no ongoing charges in database, creating new 
@@ -224,6 +239,38 @@ export default class App extends Component {
       };
   }
 
+stopOngoingCharge = (chargeid, chargeData) => {
+  //calculate totalprice based on pricetype
+  let stopTime= Date.now();
+  let electricityUsed= null;
+  let totalPrice = null
+  if(chargeData.priceType == 0) {
+    totalPrice = 0.00
+  } else if(chargeData.priceType == 1) {
+
+    totalPrice = (stopTime-chargeData.startTime)/60/1000 *chargeData.unitPrice; //check the rounding
+  } else if(chargeData.priceType == 2) {
+    electricityUsed = 30*((stopTime-chargeData.startTime)/3600/1000) //change 30 to be PowerKW from the data
+    totalPrice = electricityUsed*chargeData.unitPrice; 
+  }
+  
+  axios.put(urladdress + "charge/update/" + chargeid,
+  {
+    stopTime: stopTime,
+    electricityUsed: electricityUsed,
+    totalPrice: totalPrice
+  })
+  this.setState({chargeOngoing:false})
+  alert("THANKS FOR USING OUR PERFECT SERVICE, you spent "+ totalPrice + " euros")
+}
+
+  stopCharge = (userid) => {
+    axios.get(urladdress + "charge/"+ userid)
+    .then(response => {
+      this.stopOngoingCharge(response.data.chargeData.chargeid, response.data.chargeData);
+    })
+  }
+
 
   render() {
     return (
@@ -245,7 +292,11 @@ export default class App extends Component {
                stationSearch={this.stationSearch}
                startingCode={this.state.startingCode}
                updateSearch={this.updateSearch}
-               isChargerCodeValid ={this.isChargerCodeValid} />
+               isChargerCodeValid ={this.isChargerCodeValid}
+               chargeOngoing={this.state.chargeOngoing}
+               stopCharge={this.stopCharge}
+               userInfo={this.state.userInfo}
+               userLogged={this.state.userLogged} />
         </div>
         <div>
           <Login loginClick={this.loginClick}/>
