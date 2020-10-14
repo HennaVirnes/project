@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import history from 'history/browser';
 
 
 export default function registerform(props) {
@@ -16,6 +17,7 @@ export default function registerform(props) {
 
   function cancelReg(event) {
     event.preventDefault();
+    history.push('/map');
   }
 
   const isEnabled = props.regUserName.length > 5 &&
@@ -25,7 +27,7 @@ export default function registerform(props) {
                     props.checkTermsConditions == true;
   
   return (
-    <Route path="/register">
+    <>
       <div>
         <form onSubmit={register}>
           <div>username <input type="text" name="regUserName" placeholder="Enter username" value={props.regUserName} onChange={props.updateSearch}></input> </div>
@@ -38,6 +40,6 @@ export default function registerform(props) {
           <div><input disabled={!isEnabled} type="submit" id="submitButton" value="submit"></input></div>
         </form>
       </div>
-    </Route>
+    </>
   )
 }

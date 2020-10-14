@@ -22,10 +22,9 @@ export default class map extends Component  {
   render() {
     const position = [this.state.lat, this.state.lng]
     return (
-      <Route path="/map">
+      <>
         <Station selectedStation={this.props.selectedStation}
                  userLogged={this.props.userLogged}
-                 activeCharger={this.props.activeCharger}
                  startCharge={this.props.startCharge}
                  searchStation={this.props.searchStation}
                  stationSearch={this.props.stationSearch}
@@ -50,7 +49,7 @@ export default class map extends Component  {
               </Marker> ))}
           </Map>
         </div>
-      </Route>
+      </>
     )
   }
 

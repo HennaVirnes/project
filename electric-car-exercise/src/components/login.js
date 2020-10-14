@@ -13,7 +13,7 @@ export default function login(props) {
   }
 
   return (
-    <Route path="/login">
+    <>
       <div>
         <form onSubmit={login}>
           <div>Username <input type="text" name="username"/></div>
@@ -22,6 +22,6 @@ export default function login(props) {
           <div><Link to="/register">Don't have an account? Register here</Link></div>
         </form>
       </div>
-    </Route>
+    </>
   )
 }

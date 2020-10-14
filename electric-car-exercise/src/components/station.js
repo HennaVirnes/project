@@ -28,10 +28,12 @@ export default class station extends Component {
       <div>
         
       </div>
+      {/* checking if the user is logged and based on that shows or hides elements */}
       {this.props.userLogged === false ? (
         <span></span>
       ):(
       <div>
+        {/* checking if there is an ongoing charge and based on that shows or hides elements */}
       {this.props.chargeOngoing === false ? (
         <span>
           <input type="text" name="startingCode" placeholder="Enter code here" value={this.props.startingCode} onChange={this.props.updateSearch}/>

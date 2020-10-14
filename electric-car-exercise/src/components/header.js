@@ -6,6 +6,7 @@ export default function header(props) {
 
   let output = <div className={styles.headerLinks}> <Link to="/login">Login</Link></div>
 
+  //if user is logged, it shows my account and logout
   if(props.userLogged === true) {
     output = 
     <>
@@ -15,18 +16,14 @@ export default function header(props) {
   }
 
   return (
-    <Route path="/">
+    <>
       <div className={styles.headerBox}>
-        <div>Here the name of the service?</div>
+        <div><h1>MyCharge</h1></div>
       </div>
       <div className={styles.headerLinksContainer}>
-        <div className={styles.headerLinks}><Link to="/map">Map</Link></div>
-        <div className={styles.headerLinks}>Some</div>
-        <div className={styles.headerLinks}>Links</div>
-        
+        <div className={styles.headerLinks}><Link to="/map">Map</Link></div>        
           {output}
-        
       </div>
-    </Route>
+    </>
   )
 }

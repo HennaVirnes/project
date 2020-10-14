@@ -10,7 +10,7 @@ export default class myaccount extends Component {
     }
   
     return (
-      <Route path="/myaccount">
+      <>
         <div>
           Hello, and welcome back {this.props.userInfo.fname}!
           {output}
@@ -27,7 +27,7 @@ export default class myaccount extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.props.myCharges.map(oneCharge => ( 
+              {this.props.myCharges.map(oneCharge => ( //these should be modified to be user friendly
                 <tr key={oneCharge.chargeid}>
                   <td>{oneCharge.startTime}</td>
                   <td>{oneCharge.stopTime}</td>
@@ -39,7 +39,7 @@ export default class myaccount extends Component {
             </tbody>
           </table>
         </div>
-      </Route>
+      </>
     )
   }
 }
